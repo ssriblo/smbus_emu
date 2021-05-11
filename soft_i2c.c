@@ -1,7 +1,8 @@
-//#include <wiringPi.h>
 #include <gpiod.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <unistd.h>
+
 #include "soft_i2c.h"
 #include "gpio_utility.h"
 
@@ -15,7 +16,7 @@ void _i2c_pull(int pin) {
 
 /* Release: releases the line and return line status */
 int _i2c_release(int pin) {
-	pinMode(pin, INPUT, 0);
+	pinMode(pin, INPUT, HIGH); // value - does not matter, HIGH - just indicates actual val
 	delayMicroseconds((1e6/I2C_FREQ)/2);
 	return (pin);
 }
@@ -25,15 +26,15 @@ int _i2c_release(int pin) {
 void _i2c_release_wait(int pin) {
 	int n = 0;
 
-	pinMode(pin, INPUT, 0);
+	pinMode(pin, INPUT, HIGH);
 	delayMicroseconds((1e6/I2C_FREQ)/2);
 	while (!digitalRead(pin)) {
 		if (++n >= 50)	{
 			if (WARN) fprintf(stderr, "Warning: I2C Bus busy or defective. Pin %d is LOW for 5s.\n", pin);
 			return;
 		}
-		delay(100);
-		pinMode(pin, INPUT, 0);
+		delayMs(100);
+		pinMode(pin, INPUT, 1);
 	}
 	delayMicroseconds((1e6/I2C_FREQ)/2);
 }
@@ -45,8 +46,8 @@ i2c_t i2c_init(int scl, int sda) {
 	port.scl = scl;
 	port.sda = sda;
 
-	pinMode(scl, INPUT, 0);
-	pinMode(sda, INPUT, 0);
+	pinMode(scl, INPUT, HIGH);
+	pinMode(sda, INPUT, HIGH);
 //	pullUpDnControl(scl, PUD_UP);
 //	pullUpDnControl(sda, PUD_UP);
 
@@ -89,7 +90,7 @@ void i2c_reset(i2c_t port) {
 			if (WARN) fprintf(stderr, "Warning: I2C Bus busy or defective. SDA doesn't go UP after reset.\n");
 			return;
 		}
-		delay(10);
+		delayMs(10);
 	} while (!digitalRead(port.sda));
 
 	_i2c_pull(port.scl);

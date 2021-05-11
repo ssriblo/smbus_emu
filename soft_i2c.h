@@ -1,13 +1,3 @@
-/*
- * soft_i2c
- *      This is a basic software implementation of I2C protocol 
- *      using WiringPi library GPIO.
- *
- *      https://github.com/electronicayciencia/wPi_soft_i2c
- *
- *      Reinoso G.
- */
-
 #ifndef _SOFT_I2C_H
 #define _SOFT_I2C_H
 
@@ -18,7 +8,7 @@
 #define I2C_ACK    0
 #define I2C_NACK   1
 
-#define I2C_FREQ 100000    /* I2C clock max frequency 100kHz */
+#define I2C_FREQ 10000    /* I2C clock max frequency 10kHz */
 #define WARN     1         /* print warning message via stderr */
 
 typedef struct {

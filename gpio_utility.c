@@ -1,4 +1,9 @@
 #include <gpiod.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include "soft_i2c.h"
 #include "gpio_utility.h"
 
 #ifndef	CONSUMER
@@ -11,6 +16,19 @@ struct gpiod_line *scl_line;
 struct gpiod_line *switch_line;
 struct gpiod_line *led_line;
 struct gpiod_chip *chip;
+
+/***********************************************************
+ * Version: 0.1
+ * 
+ * ToDo:
+ * PullUp Resistor ???
+ * 
+************************************************************/
+
+
+void gpiod_chip_close(struct gpiod_chip *chip){
+	printf("CHIP CLOSED \n");
+}
 
 int pins_setup_chip(int sda, int scl){
     int ret = 0;
@@ -117,10 +135,10 @@ void pinMode(int pin, int mode, int value){
 /* for SDA line only  */
 
     if (INPUT == mode) {
-        gpiod_line_set_direction_input(sda_line);
+        gpiod_line_request_input(sda_line, CONSUMER);
 
     }else {
-        gpiod_line_set_direction_output(sda_line, value);
+        gpiod_line_request_output(sda_line, CONSUMER, value);
     }
 
 }
@@ -130,4 +148,9 @@ void delayMicroseconds(int delay_us){
     usleep(delay_us);
 }
 
+void delayMs(int delay_ms){
+    for(int i=0; i<1000; i++){
+        usleep(1000);
+    }
+}
 
