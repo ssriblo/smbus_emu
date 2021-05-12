@@ -21,6 +21,8 @@
 #define BAT_SEL_DEFAULT_VAL     LOW
 #define BOARD_ON_DEFAULT_VAL    LOW
 
+#define DEBUG1  0 /* IF "1" then print debug msg */
+
 void gpiod_chip_close(struct gpiod_chip *chip);
 int pins_setup_chip(void);
 int pins_setup_gpio(int switch_pin, int led_pin);

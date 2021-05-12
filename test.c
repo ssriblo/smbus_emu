@@ -45,6 +45,7 @@ int main (int argc, char **argv)
         sleep(1);
     }
 #endif
+#if 0
 	int addr;
 	printf("I2C scan started\n");
 	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
@@ -55,6 +56,6 @@ int main (int argc, char **argv)
         i2c_stop(i2c);
 	}
     printf ("** Scan finished **\n");
-
+#endif
 
 }

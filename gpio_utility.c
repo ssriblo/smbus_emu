@@ -148,7 +148,7 @@ void digitalWrite(int pin, int level){
         break;
     }
 	int p = gpiod_line_offset(line);
-    printf("digitalWrite() pin=%d level=%d\n", p, level);
+    if (DEBUG1) printf("digitalWrite() pin=%d level=%d\n", p, level);
     gpiod_line_set_value(line, level);
 }
 
@@ -182,7 +182,7 @@ int setOutput(struct gpiod_line *line, int flags, int value){
     int ret;
     // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
     int pin = gpiod_line_offset(line);
-    printf("setOutput() pin= %d flag= %d\n", pin, flags);
+    if (DEBUG1) printf("setOutput() pin= %d flag= %d\n", pin, flags);
     ret = gpiod_line_request_output_flags(line, CONSUMER, flags, value);
     if(ret < 0){
         printf("setOutput() FAILED \n");
