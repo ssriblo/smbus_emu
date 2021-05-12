@@ -17,8 +17,9 @@
 #define SWITCH_PIN  17
 #define LED_PIN     18
 
-//void pullUpDnControl(int pin);
-//void pullUpDnControl(int pin);
+#define SWITCH_DEFAULT_VAL  LOW
+#define LED_DEFAULT_VAL     LOW
+
 void gpiod_chip_close(struct gpiod_chip *chip);
 int pins_setup_chip(void);
 int pins_setup_gpio(int switch_pin, int led_pin);
@@ -28,5 +29,7 @@ void digitalWrite(int pin, int level);
 void pinMode(int pin, int mode, int value);
 void delayMicroseconds(int delay_us);
 void delayMs(int delay_ms);
+int setInput(struct gpiod_line *line);
+int setOutput(struct gpiod_line *line, int value);
 
 #endif

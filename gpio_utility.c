@@ -57,13 +57,13 @@ int pins_setup_gpio(int switch_pin, int led_pin){
 		goto close_chip;
 	}
 
-	ret = gpiod_line_request_input(sda_line, CONSUMER);
+    ret = setOutput(switch_pin, SWITCH_DEFAULT_VAL);
 	if (ret < 0) {
-		perror("Request sda_line as input failed\n");
+		perror("Request switch_pin as input failed\n");
 		goto release_line;
     }
 
-	ret = gpiod_line_request_input(led_line, CONSUMER);
+    ret = setOutput(led_line, LED_DEFAULT_VAL);
 	if (ret < 0) {
 		perror("Request led_line as input failed\n");
 		goto release_line;
@@ -91,12 +91,12 @@ int pins_setup_i2c(int sda, int scl){
 		perror("Get scl_line failed\n");
 		goto close_chip;
 	}
-	ret = gpiod_line_request_input(sda_line, CONSUMER);
+    ret = setInput(sda_line);
 	if (ret < 0) {
 		perror("Request sda_line as input failed\n");
 		goto release_line;
 	}
-	ret = gpiod_line_request_input(scl_line, CONSUMER);
+    ret = setInput(scl_line);
 	if (ret < 0) {
 		perror("Request scl_line as input failed\n");
 		goto release_line;
@@ -132,15 +132,36 @@ void digitalWrite(int pin, int level){
 }
 
 void pinMode(int pin, int mode, int value){
-/* for SDA line only  */
-
-    if (INPUT == mode) {
-        gpiod_line_request_input(sda_line, CONSUMER);
-
-    }else {
-        gpiod_line_request_output(sda_line, CONSUMER, value);
+    struct gpiod_line *line;
+    if(SDA_PIN == pin){
+        line = sda_line;
+    }else{
+        line = scl_line;
     }
+    if (INPUT == mode) {
+        setInput(line);
+    }else {
+        setOutput(line, value);
+    }
+}
 
+int setInput(struct gpiod_line *line){
+    int ret;
+    // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
+    ret = gpiod_line_request_input_flags(line, CONSUMER, 
+        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN | 
+        GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
+    return ret;
+}
+
+int setOutput(struct gpiod_line *line, int value){
+    int ret;
+    // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
+    gpiod_line_request_output_flags(line, CONSUMER, 
+        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN |
+        GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP, 
+        value);
+    return ret;
 }
 
 void delayMicroseconds(int delay_us){
