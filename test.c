@@ -6,6 +6,8 @@
 #include "soft_i2c.h"
 #include "gpio_utility.h"
 
+int readWordSMBus(int adr, int command);
+
 int main (int argc, char **argv)
 {
     int i;
@@ -46,6 +48,7 @@ int main (int argc, char **argv)
     }
 #endif
 #if 0
+    /* From i2cli.c */
 	int addr;
 	printf("I2C scan started\n");
 	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
@@ -57,5 +60,39 @@ int main (int argc, char **argv)
 	}
     printf ("** Scan finished **\n");
 #endif
+#if 0
+    /* From i2cli.c */
+	int addr;
+	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
+    for (addr = 0; addr < 128; addr++) {
+        i2c_start(i2c);
+        // Some devices best scanned using read, other using write
+        if (i2c_send_byte(i2c, addr << 1 | I2C_WRITE) == I2C_ACK)
+            printf (" * Device found at %02xh  (R: %02x, W: %02x)\n",
+                addr,
+                addr << 1 | 1,
+                addr << 1 | 0);
+        i2c_stop(i2c);
+#endif
+#if 0
+    val = readWordSMBus(0x0B, 0x1C);
+    printf("VAL=%d\n", val);
+#endif
+}
 
+int readWordSMBus(int adr, int command){
+	int addr;
+    int val_1, val_2;
+	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
+    i2c_start(i2c);
+    if (i2c_send_byte(i2c, addr << 1 | I2C_WRITE) == I2C_ACK){
+        i2c_send_byte(i2c, command);
+        i2c_start(i2c);
+        i2c_send_byte(i2c, addr << 1 | I2C_READ);
+        val_1 = i2c_read_byte(i2c);
+        i2c_send_bit(i2c, I2C_ACK);
+        val_2 = i2c_read_byte(i2c);
+        i2c_send_bit(i2c, I2C_NACK);
+    }
+    return (val_2 << 8) + val_1;
 }
