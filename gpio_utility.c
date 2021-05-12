@@ -57,7 +57,7 @@ int pins_setup_gpio(int switch_pin, int led_pin){
 		goto close_chip;
 	}
 
-    ret = setOutput(switch_pin, SWITCH_DEFAULT_VAL);
+    ret = setOutput(switch_line, SWITCH_DEFAULT_VAL);
 	if (ret < 0) {
 		perror("Request switch_pin as input failed\n");
 		goto release_line;
