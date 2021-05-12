@@ -147,8 +147,8 @@ void digitalWrite(int pin, int level){
     default:
         break;
     }
-	int p = gpiod_line_offset(line);
-    printf("digitalWrite() pin=%d level=%d\n", p, level);
+//	int p = gpiod_line_offset(line);
+//    printf("digitalWrite() pin=%d level=%d\n", p, level);
     gpiod_line_set_value(line, level);
 }
 
