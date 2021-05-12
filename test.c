@@ -27,18 +27,19 @@ int main (int argc, char **argv)
         sleep(1);
     }
     int val = 0;
-    for(i=0; i<5; i++){
+    for(i=0; i<2; i++){
+        printf("***** SDA INPUT *****\n");
         pinMode(SDA_PIN, INPUT, 0);
         sleep(1);
         val = digitalRead(SDA_PIN);
         printf("SDA Input=%d\n", val);
 
+        printf("***** SDA OUTPUT=1 *****\n");
         pinMode(SDA_PIN, OUTPUT, 1);
-        printf("SDA Output=1\n");
         sleep(1);
 
-        pinMode(SDA_PIN, OUTPUT, 1);
-        printf("SDA Output\n");
+        printf("***** SDA OUTPUT=0 *****\n");
+        pinMode(SDA_PIN, OUTPUT, 0);
         sleep(1);
     }   
 }

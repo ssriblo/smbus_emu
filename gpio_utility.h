@@ -3,16 +3,18 @@
 
 #include <gpiod.h>
 
-
-
-#define INPUT   0
-#define OUTPUT  1
+#define INPUT   GPIOD_LINE_DIRECTION_INPUT
+#define OUTPUT  GPIOD_LINE_DIRECTION_OUTPUT
 
 #define LOW     0
 #define HIGH    1
 
 #define SDA_PIN         19 
+#define SDA_WATCH_PIN   14
+
 #define SCL_PIN         21
+#define SCL_WATCH_PIN   17
+
 #define BAT_SEL_PIN     20
 #define BOARD_ON_PIN    18
 

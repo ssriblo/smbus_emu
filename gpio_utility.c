@@ -60,14 +60,14 @@ int pins_setup_gpio(int bat_sel_pin, int board_on_pin){
     printf("setOutput(bat_sel_line) \n");
     ret = setOutput(bat_sel_line, 0, BAT_SEL_DEFAULT_VAL);
 	if (ret < 0) {
-		printf("Request bat_sel_pin as input failed\n");
+		printf("Request bat_sel_pin as Output failed\n");
 		goto release_line;
     }
 
     printf("setOutput(board_on_line) \n");
     ret = setOutput(board_on_line, 0, BOARD_ON_DEFAULT_VAL);
 	if (ret < 0) {
-		printf("Request board_on_line as input failed\n");
+		printf("Request board_on_line as Output failed\n");
 		goto release_line;
     }
     printf("gpio setup done\n");
@@ -147,19 +147,24 @@ void digitalWrite(int pin, int level){
     default:
         break;
     }
-//	int p = gpiod_line_offset(line);
-//    printf("digitalWrite() pin=%d level=%d\n", p, level);
+	int p = gpiod_line_offset(line);
+    printf("digitalWrite() pin=%d level=%d\n", p, level);
     gpiod_line_set_value(line, level);
 }
 
-void pinMode(int pin, int mode, int value){
+void pinMode(int pin, int newDirection, int value){
     struct gpiod_line *line;
     if(SDA_PIN == pin){
         line = sda_line;
     }else{
         line = scl_line;
     }
-    if (INPUT == mode) {
+    int direction = gpiod_line_direction(line);
+    if(newDirection != direction) {
+        gpiod_line_release(line);
+    }  
+
+    if (GPIOD_LINE_DIRECTION_INPUT == newDirection) {
         setInput(line);
     }else {
         setOutput(line, GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN, value);
