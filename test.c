@@ -10,17 +10,20 @@ int main (int argc, char **argv)
 {
     printf("I2C Bus Emu started \n");
     pins_setup_chip();
-    pins_setup_gpio(BAT_SEL, BOARD_ON);
-//    pins_setup_i2c(SDA_PIN, SCL_PIN);
+    pins_setup_i2c(SDA_PIN, SCL_PIN);
+    pins_setup_gpio(BAT_SEL_PIN, BOARD_ON_PIN);
+    printf("Start Cycle\n");
     while(true){
-        digitalWrite(BAT_SEL, LOW);
+        printf("*");
+        fflush(stdout);
+        digitalWrite(BAT_SEL_PIN, LOW);
         sleep(1);
-        digitalWrite(BOARD_ON, HIGH);
+//        digitalWrite(BOARD_ON_PIN, HIGH);
+//        sleep(1);
+        digitalWrite(BAT_SEL_PIN, HIGH);
         sleep(1);
-        digitalWrite(BAT_SEL, HIGH);
-        sleep(1);
-        digitalWrite(BOARD_ON, LOW);
-        sleep(1);
+//        digitalWrite(BOARD_ON_PIN, LOW);
+//        sleep(1);
     }
 
 }

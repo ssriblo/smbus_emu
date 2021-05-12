@@ -11,10 +11,10 @@
 #define LOW     0
 #define HIGH    1
 
-#define SDA_PIN     13 
-#define SCL_PIN     14
-#define BAT_SEL     17
-#define BOARD_ON    18
+#define SDA_PIN         19 
+#define SCL_PIN         21
+#define BAT_SEL_PIN     20
+#define BOARD_ON_PIN    18
 
 #define BAT_SEL_DEFAULT_VAL     LOW
 #define BOARD_ON_DEFAULT_VAL    LOW
