@@ -11,14 +11,13 @@
 #define LOW     0
 #define HIGH    1
 
-// !!!!! TBD again!! !!!!!
 #define SDA_PIN     13 
 #define SCL_PIN     14
-#define SWITCH_PIN  17
-#define LED_PIN     18
+#define BAT_SEL     17
+#define BOARD_ON    18
 
-#define SWITCH_DEFAULT_VAL  LOW
-#define LED_DEFAULT_VAL     LOW
+#define BAT_SEL_DEFAULT_VAL     LOW
+#define BOARD_ON_DEFAULT_VAL    LOW
 
 void gpiod_chip_close(struct gpiod_chip *chip);
 int pins_setup_chip(void);
@@ -30,6 +29,6 @@ void pinMode(int pin, int mode, int value);
 void delayMicroseconds(int delay_us);
 void delayMs(int delay_ms);
 int setInput(struct gpiod_line *line);
-int setOutput(struct gpiod_line *line, int value);
+int setOutput(struct gpiod_line *line, int flags, int value);
 
 #endif

@@ -13,8 +13,8 @@
 /**** GLOBALS ****/
 static struct gpiod_line *sda_line;
 static struct gpiod_line *scl_line;
-static struct gpiod_line *switch_line;
-static struct gpiod_line *led_line;
+static struct gpiod_line *bat_sel_line;
+static struct gpiod_line *board_on_line;
 static struct gpiod_chip *chip;
 
 /***********************************************************
@@ -42,36 +42,38 @@ int pins_setup_chip(void){
     return ret;
 }
 
-int pins_setup_gpio(int switch_pin, int led_pin){
+int pins_setup_gpio(int bat_sel_pin, int board_on_pin){
     // Call after pins_setup_chip() !!
 	int ret = 0;
-    switch_line = gpiod_chip_get_line(chip, switch_pin);
-	if (!switch_line) {
-		perror("Get switch_line failed\n");
+    bat_sel_line = gpiod_chip_get_line(chip, bat_sel_pin);
+	if (!bat_sel_line) {
+		perror("Get bat_sel_line failed\n");
 		goto close_chip;
 	}
 
-    led_line = gpiod_chip_get_line(chip, led_pin);
-	if (!led_line) {
-		perror("Get led_line failed\n");
+    board_on_line = gpiod_chip_get_line(chip, board_on_pin);
+	if (!board_on_line) {
+		perror("Get board_on_line failed\n");
 		goto close_chip;
 	}
 
-    ret = setOutput(switch_line, SWITCH_DEFAULT_VAL);
+    printf("setOutput(bat_sel_line) ");
+    ret = setOutput(bat_sel_line, 0, BAT_SEL_DEFAULT_VAL);
 	if (ret < 0) {
-		perror("Request switch_pin as input failed\n");
+		perror("Request bat_sel_pin as input failed\n");
 		goto release_line;
     }
 
-    ret = setOutput(led_line, LED_DEFAULT_VAL);
+    printf("setOutput(board_on_line) ");
+    ret = setOutput(board_on_line, 0, BOARD_ON_DEFAULT_VAL);
 	if (ret < 0) {
-		perror("Request led_line as input failed\n");
+		perror("Request board_on_line as input failed\n");
 		goto release_line;
     }
     
     release_line:
-        gpiod_line_release(switch_line);
-        gpiod_line_release(led_line);
+        gpiod_line_release(bat_sel_line);
+        gpiod_line_release(board_on_line);
     close_chip:
         gpiod_chip_close(chip);        
         ret = -1;
@@ -141,24 +143,24 @@ void pinMode(int pin, int mode, int value){
     if (INPUT == mode) {
         setInput(line);
     }else {
-        setOutput(line, value);
+        setOutput(line, GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN, value);
     }
 }
 
 int setInput(struct gpiod_line *line){
     int ret;
     // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
-    ret = gpiod_line_request_input_flags(line, CONSUMER, 
-        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN);
+    ret = gpiod_line_request_input_flags(line, CONSUMER, 0);
     return ret;
 }
 
-int setOutput(struct gpiod_line *line, int value){
+int setOutput(struct gpiod_line *line, int flags, int value){
     int ret;
     // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
-    gpiod_line_request_output_flags(line, CONSUMER, 
-        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN,
-        value);
+    ret = gpiod_line_request_output_flags(line, CONSUMER, flags, value);
+    if(ret < 0){
+        printf("setOutput() FAILED ");
+    }
     return ret;
 }
 
