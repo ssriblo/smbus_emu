@@ -149,8 +149,7 @@ int setInput(struct gpiod_line *line){
     int ret;
     // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
     ret = gpiod_line_request_input_flags(line, CONSUMER, 
-        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN | 
-        GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP);
+        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN);
     return ret;
 }
 
@@ -158,8 +157,7 @@ int setOutput(struct gpiod_line *line, int value){
     int ret;
     // ?? GPIOD_LINE_REQUEST_FLAG_ACTIVE_LOW ??
     gpiod_line_request_output_flags(line, CONSUMER, 
-        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN |
-        GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP, 
+        GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN,
         value);
     return ret;
 }
