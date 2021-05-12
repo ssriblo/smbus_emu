@@ -13,6 +13,8 @@ int main (int argc, char **argv)
     pins_setup_chip();
     pins_setup_i2c(SDA_PIN, SCL_PIN);
     pins_setup_gpio(BAT_SEL_PIN, BOARD_ON_PIN);
+#define STATIC_TEST 1
+#ifdef STATIC_TEST    
     printf("Start Cycle\n");
     for(i=0; i<2; i++){
         printf("*");
@@ -41,5 +43,18 @@ int main (int argc, char **argv)
         printf("***** SDA OUTPUT=0 *****\n");
         pinMode(SDA_PIN, OUTPUT, 0);
         sleep(1);
-    }   
+    }
+#endif
+	int addr;
+	printf("I2C scan started\n");
+	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
+    for (addr = 0; addr < 128; addr++) {
+        i2c_start(i2c);
+        if (i2c_send_byte(i2c, addr << 1 | I2C_READ) == I2C_ACK)
+            printf (" * Device found at %0xh\n", addr);
+        i2c_stop(i2c);
+	}
+    printf ("** Scan finished **\n");
+
+
 }
