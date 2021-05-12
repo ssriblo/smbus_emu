@@ -11,11 +11,11 @@
 #endif
 
 /**** GLOBALS ****/
-struct gpiod_line *sda_line;
-struct gpiod_line *scl_line;
-struct gpiod_line *switch_line;
-struct gpiod_line *led_line;
-struct gpiod_chip *chip;
+static struct gpiod_line *sda_line;
+static struct gpiod_line *scl_line;
+static struct gpiod_line *switch_line;
+static struct gpiod_line *led_line;
+static struct gpiod_chip *chip;
 
 /***********************************************************
  * Version: 0.1
@@ -30,7 +30,7 @@ void gpiod_chip_close(struct gpiod_chip *chip){
 	printf("CHIP CLOSED \n");
 }
 
-int pins_setup_chip(int sda, int scl){
+int pins_setup_chip(void){
     int ret = 0;
     char *chipname = "gpiochip0";
 //	chip = gpiod_chip_open_by_name(chipname);
