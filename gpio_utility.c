@@ -160,9 +160,9 @@ void pinMode(int pin, int newDirection, int value){
         line = scl_line;
     }
     int direction = gpiod_line_direction(line);
-    if(newDirection != direction) {
+    //if(newDirection != direction) {
         gpiod_line_release(line);
-    }  
+    //}  
 
     if (GPIOD_LINE_DIRECTION_INPUT == newDirection) {
         setInput(line);

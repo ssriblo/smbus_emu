@@ -15,7 +15,7 @@ int main (int argc, char **argv)
     pins_setup_chip();
     pins_setup_i2c(SDA_PIN, SCL_PIN);
     pins_setup_gpio(BAT_SEL_PIN, BOARD_ON_PIN);
-#define STATIC_TEST 1
+//#define STATIC_TEST 1
 #ifdef STATIC_TEST    
     printf("Start Cycle\n");
     for(i=0; i<2; i++){
@@ -73,25 +73,29 @@ int main (int argc, char **argv)
                 addr << 1 | 1,
                 addr << 1 | 0);
         i2c_stop(i2c);
+    }
 #endif
-#if 0
-    val = readWordSMBus(0x0B, 0x1C);
+//#if 0
+    int val;
+//    val = readWordSMBus(0x0B, 0x1C);
     printf("VAL=%d\n", val);
-#endif
+//#endif
 }
 
 int readWordSMBus(int adr, int command){
-	int addr;
-    int val_1, val_2;
+    int val_1=0, val_2=0;
 	i2c_t i2c = i2c_init(SCL_PIN, SDA_PIN);
     i2c_start(i2c);
-    if (i2c_send_byte(i2c, addr << 1 | I2C_WRITE) == I2C_ACK){
+    printf("start i2c finished\n");
+    if (i2c_send_byte(i2c, adr << 1 | I2C_WRITE) == I2C_ACK){
         i2c_send_byte(i2c, command);
         i2c_start(i2c);
-        i2c_send_byte(i2c, addr << 1 | I2C_READ);
+        i2c_send_byte(i2c, adr << 1 | I2C_READ);
         val_1 = i2c_read_byte(i2c);
+        printf("val_1=%d\n", val_1);
         i2c_send_bit(i2c, I2C_ACK);
         val_2 = i2c_read_byte(i2c);
+        printf("val_2=%d\n", val_2);
         i2c_send_bit(i2c, I2C_NACK);
     }
     return (val_2 << 8) + val_1;
