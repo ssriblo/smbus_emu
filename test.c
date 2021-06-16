@@ -15,8 +15,8 @@ int main (int argc, char **argv)
     pins_setup_chip();
     pins_setup_i2c(SDA_PIN, SCL_PIN);
     pins_setup_gpio(BAT_SEL_PIN, BOARD_ON_PIN);
-//#define STATIC_TEST 1
-#ifdef STATIC_TEST    
+
+#if 0
     printf("Start Cycle\n");
     for(i=0; i<2; i++){
         printf("*");
@@ -77,7 +77,7 @@ int main (int argc, char **argv)
 #endif
 //#if 0
     int val;
-//    val = readWordSMBus(0x0B, 0x1C);
+    val = readWordSMBus(0x0B, 0x1C);
     printf("VAL=%d\n", val);
 //#endif
 }
@@ -98,5 +98,6 @@ int readWordSMBus(int adr, int command){
         printf("val_2=%d\n", val_2);
         i2c_send_bit(i2c, I2C_NACK);
     }
+    stopAll();
     return (val_2 << 8) + val_1;
 }

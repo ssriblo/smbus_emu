@@ -30,6 +30,12 @@ void gpiod_chip_close(struct gpiod_chip *chip){
 	printf("CHIP CLOSED \n");
 }
 
+void stopAll(void){
+    gpiod_line_release(sda_line);
+    gpiod_line_release(scl_line);
+    gpiod_chip_close(chip);
+}
+
 int pins_setup_chip(void){
     int ret = 0;
     char *chipname = "gpiochip0";
